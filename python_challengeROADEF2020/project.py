@@ -2,7 +2,7 @@
 """
 Created: Tue Oct 18 23:04:35 2020
 Last modified: Tue Oct 27 23:04:35 2020
-@author: David ING, Zian LI, Kuo CHEN
+@author: David ING
 """
 import json
 from tkinter.filedialog import askopenfilename
