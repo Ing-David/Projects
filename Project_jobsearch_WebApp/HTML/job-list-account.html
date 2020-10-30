@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+      <title>Jobs List</title>
+      <meta charset="utf-8">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <meta name="generator" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- <link rel="stylesheet" href="nav-bar.css"> -->
+      <link rel="stylesheet" href="../CSS/font-awesome.min.css">    
+      <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+      <link rel="stylesheet" href="../CSS/job-list.css"> 
+      <script src="../js/jquery.min.js"></script>
+      <script src="../js/popper.min.js"></script>
+      <script src="../js/bootstrap.min.js"></script>
+      <script src="../js/all.js"></script>
+      <style type="text/css" media="screen"></style>
+      <style>
+    .images {
+      clear: both;
+      position: absolute;
+      margin-top: 10px;
+    }
+
+    .text-font {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      color: white;
+    }
+
+    .text-jobs {
+      margin-left: 25px;
+      margin-top: 10px;
+    }
+
+    .space {
+      padding: 0px 0px 20px 20px;
+      border: 1.5px solid black;
+    }
+
+    .newBorder {
+      padding: 5px 5px 5px 5px;
+      border: 1px solid gold;
+      background: purple;
+    }
+    .newPadding {
+      padding: 0px 0px 0px 7px;
+    }
+    .container {
+      position: relative;
+      color: white;
+    }
+
+    .centered {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .box-centered {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, -500%);
+    }
+
+    .newImageSize {
+      width: 100%;
+      margin-top: 5px;
+      height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- FIRST NAVIGATION BAR -->
+
+  <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top font">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="jobs-search-account.html" style="font-size:40px;color:#642891;font-weight: 500;" id="logoapp">Ethernal Jobs</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+        <span><img src="accountlogo.png" alt="Account"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li><a class="nav-link background" href="sign-in.html" id="signup" style="background-color:#642891;border-radius: 10rem;">Sign Out</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SECOND NAVIGATION BAR -->
+  <nav class="navbar navbar-expand-md navbar-light customize font" style="background-color:  #F5F5F5">
+    <div class="container-fluid" >
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#SecondnavbarResponsive">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="SecondnavbarResponsive">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link companyProfile" href="jobs-account.html">Job List</a></li>
+          <li class="nav-item"><a class="nav-link companyProfile" href="job-list-account.html">Browse Job</a></li>
+          <li class="nav-item"><a class="nav-link companyProfile" href="company-account.html">Company Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+    <script>
+        var show = document.getElementById('show');
+        var hided = document.getElementById('hided');
+        show.style.display = "none";
+        function login(){
+          show.style.display = "block";
+          hided.style.display = "none";
+        }
+    </script>
+    <div class="container-fluid search-box">
+      <div class="wrap">
+         
+          <h3 class="slogan text-font newBorder">Search For Better - Find Jobs Here</h3>
+          <form role="form">
+              <div class="form-row justify-content-start">
+                  <div class="form-group has-success has-feedback col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                      <input type="text" class="form-control" placeholder="Search for Companies">
+                      
+                  </div>
+                  <div class="form-group col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                      <input type="text" class="form-control" placeholder="Location">
+                  </div>
+                  <div class="form-group col-sm-6 offset-sm-3 col-md-2 offset-md-0 col-lg-2 col-xl-2">
+                      
+                          <button type="Search" class="btn btn-primary">Search</button>
+                      
+                  </div>
+              </div>
+          </form>
+      </div>
+</div>
+
+  <br>
+  <div>
+    <h3 align="center">Browse Jobs</h3><br>
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-5">
+        <div class="space">
+          <img src="https://img.icons8.com/ios-glyphs/30/000000/briefcase.png" class="images" width="30" height="30">
+          <h3 class="text-jobs">Jobs by Title</h3>
+          <a href="#" class="newPadding">A</a>
+          <a href="#" class="newPadding">B</a>
+          <a href="#" class="newPadding">C</a>
+          <a href="#" class="newPadding">D</a>
+          <a href="#" class="newPadding">E</a>
+          <a href="#" class="newPadding">F</a>
+          <a href="#" class="newPadding">G</a>
+          <a href="#" class="newPadding">H</a>
+          <a href="#" class="newPadding">I</a>
+          <a href="#" class="newPadding">J</a>
+          <a href="#" class="newPadding">K</a>
+          <a href="#" class="newPadding">L</a>
+          <a href="#" class="newPadding">M</a>
+          <a href="#" class="newPadding">N</a>
+          <a href="#" class="newPadding">O</a>
+          <a href="#" class="newPadding">P</a>
+          <a href="#" class="newPadding">Q</a>
+          <a href="#" class="newPadding">R</a>
+          <a href="#" class="newPadding">S</a>
+          <a href="#" class="newPadding">T</a>
+          <a href="#" class="newPadding">U</a>
+          <a href="#" class="newPadding">V</a>
+          <a href="#" class="newPadding">W</a>
+          <a href="#" class="newPadding">X</a>
+          <a href="#" class="newPadding">Y</a>
+          <a href="#" class="newPadding">Z</a>
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="space">
+          <img src="https://img.icons8.com/material-rounded/30/000000/organization.png" class="images" width="30"
+            height="30">
+          <h3 class="text-jobs">Jobs by Company</h3>
+          <a href="#" class="newPadding">A</a>
+          <a href="#" class="newPadding">B</a>
+          <a href="#" class="newPadding">C</a>
+          <a href="#" class="newPadding">D</a>
+          <a href="#" class="newPadding">E</a>
+          <a href="#" class="newPadding">F</a>
+          <a href="#" class="newPadding">G</a>
+          <a href="#" class="newPadding">H</a>
+          <a href="#" class="newPadding">I</a>
+          <a href="#" class="newPadding">J</a>
+          <a href="#" class="newPadding">K</a>
+          <a href="#" class="newPadding">L</a>
+          <a href="#" class="newPadding">M</a>
+          <a href="#" class="newPadding">N</a>
+          <a href="#" class="newPadding">O</a>
+          <a href="#" class="newPadding">P</a>
+          <a href="#" class="newPadding">Q</a>
+          <a href="#" class="newPadding">R</a>
+          <a href="#" class="newPadding">S</a>
+          <a href="#" class="newPadding">T</a>
+          <a href="#" class="newPadding">U</a>
+          <a href="#" class="newPadding">V</a>
+          <a href="#" class="newPadding">W</a>
+          <a href="#" class="newPadding">X</a>
+          <a href="#" class="newPadding">Y</a>
+          <a href="#" class="newPadding">Z</a>
+        </div>
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+    <br>
+
+    <div class="row">
+      <div class="col-md-1"></div>
+      <div class="col-md-5">
+        <div class="space">
+          <img class="images" src="location.png" width="30" height="30">
+          <h3 class="text-jobs">Jobs by Location</h3>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Phnom Penh</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Banteay Meanchey</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Battambong</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Kompong Cham</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kampong Chhnang</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kampong Speu</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Kampong Thom</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kampot</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kandal</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Koh Kong</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kep</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Kratie</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Mundolkiri</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Oddar Meanchey</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Pailin</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Sihanoukville</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Preah Vihear</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Pursat</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Prey Veng</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Ratanakiri</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Siem Reap</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Stung Treng</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Svay Rieng</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Takeo</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Tbong Khmum</a>
+            </div>
+            <div class="col-md">
+              <a href="#"></a>
+            </div>
+            <div class="col-md">
+              <a href="#"></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-5">
+        <div class="space">
+          <img src="https://img.icons8.com/ios-glyphs/30/000000/rules.png" class="images" width="30" height="30">
+          <h3 class="text-jobs">Jobs by Categories</h3>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Accounting</a>
+            </div>
+            <div class="col">
+              <a href="#">Admin/Supervisory</a>
+            </div>
+            <div class="col">
+              <a href="#">Advisory</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Advocacy</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Agriculture</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Analyst</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Architecture</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Ant/Graphic Design</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Assistant</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Banking/Finance</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Business</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Cathering</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Child Care</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Child Protection</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Communication</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Computer</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Construction</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Consultancy</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Engineering</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Entertainment</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Fashion/Beauty</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">Health/Medical</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Home Help/Labour</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Hotel/Restaurant</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col-md">
+              <a href="#">HR</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Internship</a>
+            </div>
+            <div class="col-md">
+              <a href="#">Invitation for Bids</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Laboratory Work</a>
+            </div>
+            <div class="col">
+              <a href="#">Law</a>
+            </div>
+            <div class="col">
+              <a href="#">Manufacture</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Media</a>
+            </div>
+            <div class="col">
+              <a href="#">Monitoring/Evaluation</a>
+            </div>
+            <div class="col">
+              <a href="#">Other</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Research</a>
+            </div>
+            <div class="col">
+              <a href="#">Resources</a>
+            </div>
+            <div class="col">
+              <a href="#">Rural Development</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Sales/Marketing</a>
+            </div>
+            <div class="col">
+              <a href="#">Scholarships</a>
+            </div>
+            <div class="col">
+              <a href="#">Security</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Shipping</a>
+            </div>
+            <div class="col">
+              <a href="#">Social Work</a>
+            </div>
+            <div class="col">
+              <a href="#">Telecom</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Tourism</a>
+            </div>
+            <div class="col">
+              <a href="#">Training/Workshops</a>
+            </div>
+            <div class="col">
+              <a href="#">Translation</a>
+            </div>
+          </div>
+          <div class="row-md">
+            <div class="col">
+              <a href="#">Volunteer</a>
+            </div>
+            <div class="col">
+              <a href="#"></a>
+            </div>
+            <div class="col">
+              <a href="#"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-1"></div>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+.img-log {
+    margin-top: 20px;
+    width: 394px;
+}
+.login{
+    padding: 5px 120px;
+}
+.btn{
+    padding: 8px 43px;
+    border-radius: 19px;
+}
+.btn-info{
+    background-color: #155079;
+    margin: 20px 0;
+    border: 0;
+    transition: all 0.7s;
+    border: 1px solid #155079;
+}
+.btn-info:hover{
+    background-color: #fff;
+    color: #155079;
+}
+.g{
+    padding: 90px 0;
+}
+.h{
+    margin: 15px 0;
+}
+.form-control{
+    border-radius: 0;
+    border: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #ccc;
+    transition: all 0.7s;
+}
+.input-group-addon{
+    background: 0; 
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+.form-control:focus{
+    border: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #ccc;
+}
+
+ul>li{
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.background{
+    background-color: #642891;
+    color: #fff !important;
+    border-radius: 10rem;
+
+}  
+

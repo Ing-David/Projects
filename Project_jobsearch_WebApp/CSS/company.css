@@ -1,0 +1,252 @@
+*{
+    font-family: 'Roboto';
+}
+
+h3 {
+    text-align: center;
+    font-weight: 300;
+}
+
+h5{
+    font-size: 1rem;
+}
+
+.search-box{
+    padding-left: 0px;
+    padding-right: 0px;
+    background-image: url('../HTML/work.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    /* background: no-repeat center center; */
+    background-size: cover;
+    height: 400px;
+    margin-bottom: 40px;
+    overflow: auto;
+}
+
+.wrap {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 28px;
+    display: block;
+    width: 800px;
+    text-align: center;
+    margin: 80px auto;
+}
+
+.slogan{
+    padding-bottom: 10px;
+    font-size: 1.25rem;
+    color: #ffffff;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary{
+    background-color: #642891;
+    border-color: #642891;
+    border-radius: 0;
+}
+
+.form-control + .glyphicon {
+    position: absolute;
+    right: 0;
+    padding: 8px 27px;
+}
+
+
+a{
+    color: #642891;
+}
+
+.card-text{
+    text-align: justify; 
+    font-size: 0.75rem;
+}
+
+.card-body{
+    padding: 0 1rem 1rem;
+    overflow: auto;
+    height: 200px;
+}
+
+/* .card-columns {
+    @media-breakpoint-only(lg) {
+      column-count: 2;
+    }   
+    @include media-breakpoint-only(xl) {
+      column-count: 2;
+    }
+} */
+
+ul>li{
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.background{
+    background-color: #642891;
+    color: #fff !important;
+    border-radius: 10rem;
+}
+
+.form-control::-webkit-input-placeholder { color: #642891;   }
+.form-control::-moz-placeholder { color: #642891;}
+.form-control:-ms-input-placeholder { color: #642891; }
+.form-control{ color :#642891;border-color: #642891;border-width: 1px;border-radius: 0}
+
+    /* .card-columns{
+        display:inline-block;   
+        -webkit-column-break-inside: avoid;
+    } */
+/* .has-feedback{
+    position: relative;
+} */
+
+
+/* input{
+    text-align: center;
+} */
+/* .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+} */
+
+/* .large-button{
+
+} */
+
+/* @media (min-width:990px),(max-width: 1920px) {
+    
+    .slogan{
+        font-size: 0.75rem;
+    }
+    .btn{
+        font-size: 0.75rem;
+    }
+    .form-control{
+        font-size:0.75rem;
+    } 
+    
+}  */
+
+/* extra large */
+@media (min-width: 1200px) {
+    .slogan{
+        font-size: 1rem;
+    }
+    .wrap{
+        width: 700px;
+        margin:120px auto;
+        padding-bottom: 14px;
+    }
+    .search-box{
+        height: 400px;
+        overflow:hidden;
+    }
+    .form-control{
+        font-size: 0.75rem;
+    }
+    .btn{
+        font-size: 0.75rem;
+        font-weight: 300;
+    }
+    /* .card-columns{
+        column-count: 3 ;   
+        
+    } */
+    /* .container{
+        margin-left: 100px;
+        margin-right: 100px;
+    } */
+}
+
+/* large */
+@media (min-width: 992px) and (max-width: 1199.98px) { 
+    .slogan{
+        font-size: 1rem;
+    }
+    .wrap{
+        width: 700px;
+        margin:100px auto;
+        padding-bottom: 14px;
+    }
+    .search-box{
+        height: 360px;
+        overflow:hidden;
+    }
+    .form-control{
+        font-size: 0.75rem;
+    }
+    .btn{
+        font-size: 0.75rem;
+        font-weight: 300;
+    }
+    /* .card-columns{
+        column-count: 2;    
+    } */
+ }
+
+ /* meduim */
+
+ @media (min-width: 768px) and (max-width: 991.98px) { 
+    .slogan{
+        font-size: 0.9rem;
+    }
+    .wrap{
+        width: 600px;
+        margin:40px auto;
+        padding-bottom: 14px;   
+    }
+    .search-box{
+        height: 240px;
+        overflow:hidden;
+    }
+    .form-control{
+        font-size: 0.65rem;
+    }
+    .btn{
+        font-size: 0.65rem;
+        font-weight: 300;
+        margin-left: 30px;
+        margin-top:10px;
+    }
+    /* .card-columns{
+        column-count: 2;    
+    } */
+} 
+
+/* small */
+@media (min-width: 576px) and (max-width: 767.98px){ 
+    .slogan{
+        font-size: 1rem;
+    }
+    .wrap{
+        width: 400px;
+        margin:40px auto;
+    }
+    .search-box{
+        height: 480px;
+        overflow:hidden;
+    }
+    /* .card-columns{
+        column-count: 1;    
+    } */
+}
+
+/* extra small */
+@media (max-width: 575.98px) {
+    .slogan{
+        font-size: 1rem;
+    }
+    .wrap{
+        width: auto;
+        margin: auto;
+    }
+    .search-box{
+        height: 380px;
+        overflow:hidden;
+    }
+    /* .form-control{
+        padding: 0;
+    } */
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Sign Up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="../CSS/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="../CSS/sign.css">
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/all.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content=""> 
+  </head>
+  <body>
+     <!-- FIRST NAVIGATION BAR -->
+
+     <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top font">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="jobs-search.html" style="font-size:40px;color:#642891;font-weight: 500;" id="logoapp">Ethernal Jobs</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+            <span><img src="accountlogo.png" alt="Account"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item "><a class="nav-link" href="sign-in.html" id="login">Log In</a></li>
+              <li><a class="nav-link background" href="sign-up.html" id="signup" style="background-color:#642891;border-radius: 10rem;">Sign Up</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    
+      <!-- SECOND NAVIGATION BAR -->
+      <nav class="navbar navbar-expand-md navbar-light customize font" style="background-color:  #F5F5F5">
+        <div class="container-fluid" >
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#SecondnavbarResponsive">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="SecondnavbarResponsive">
+            <ul class="navbar-nav">
+              <li class="nav-item"><a class="nav-link companyProfile" href="jobs.html">Job List</a></li>
+              <li class="nav-item"><a class="nav-link companyProfile" href="job-list.html">Browse Job</a></li>
+              <li class="nav-item"><a class="nav-link companyProfile" href="company.html">Company Profile</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+     
+     <div class="container">
+       <div class="row">
+       <div class="col-md-6">
+         <img src="web-design-development.jpg" class="img responsive img-log" alt="">
+       </div>
+       <div class="col-md-6 text-center">
+         <div class="g">
+           <h3 class="head">Create Your Account Here</h3>
+           <p class="para"></p>
+           <form class="login" id="sign-up">
+             <div class="input-group h">
+              <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>&nbsp
+              <input id="txtEmail" type="email" class="form-control" placeholder="Email" name="Email">
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>&nbsp
+              <input id="txtPass" type="password" class="form-control" placeholder="Password" name="Password">
+            </div>
+            <div class="input-group h">
+              <span class="input-group-addon"><i class="fa fa-lock" aria-hidden="true"></i></span>&nbsp
+              <input id="txtVerPass" type="password" class="form-control" placeholder="Confirm Password" name="ConfirmPassword">
+            </div>
+            <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox">&nbsp;Accept all Terms & Conditions
+              </label>  
+            </div>
+            <div><article id="demo" class="text-danger"></article></div>
+            <div><article id="successfulsignup" class="text-info"></article></div>
+            <div class="container"><br></div>
+            <button class="btn" type="submit"  style="background-color: #642891;color: #fff;">Sign Up</button>
+            <div class="checkbox mb-3">  
+              </div>
+              <a>Already have an account?</a><br>
+              <button class="btn"  style="background-color: #642891;"><a href="sign-in.html" style="text-decoration:none;color: white">Sign In</a></button>
+           </form>          
+         </div>
+       </div>
+      </div>
+     </div>
+     <script></script>
+     <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+     <script src="../js/sign-up.js"></script>
+     </body>
+     </html>

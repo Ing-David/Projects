@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Jobs Search</title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../CSS/font-awesome.m  in.css">
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <link rel="stylesheet" href="../CSS/company.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/all.js"></script>   
+  </head>
+  <body>
+    
+       <!-- FIRST NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top font">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="jobs-search.html" style="font-size:40px;color:#642891;font-weight: 500;" id="logoapp">Ethernal Jobs</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+          <span><img src="accountlogo.png" alt="Account"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item "><a class="nav-link" href="sign-in.html" id="login">Log In</a></li>
+            <li><a class="nav-link background" href="sign-up.html" id="signup" style="background-color:#642891;border-radius: 10rem;">Sign Up</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  
+    <!-- SECOND NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-md navbar-light customize font" style="background-color:  #F5F5F5">
+      <div class="container-fluid" >
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#SecondnavbarResponsive">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="SecondnavbarResponsive">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link companyProfile" href="jobs.html">Job List</a></li>
+            <li class="nav-item"><a class="nav-link companyProfile" href="job-list.html">Browse Job</a></li>
+            <li class="nav-item"><a class="nav-link companyProfile" href="company.html">Company Profile</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+     
+        <div class="container-fluid search-box">
+                <div class="wrap">
+                    
+                    <!-- <form role="search" class="form-inline wrap">
+                        <h1 class="slogan">Explore companies to find the best fit</h1>
+                        
+                        <div class="inline-feedback"></div>
+                    </form> -->
+                    <h3 class="slogan">Explore companies to find the best fit</h3>
+                    <form role="form">
+                        <div class="form-row justify-content-start">
+                            <div class="form-group has-success has-feedback col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                <input type="text" class="form-control" placeholder="Search for Companies">
+                                <!-- <span class="form-control-feedback glyphicon glyphicon-search"></span> -->
+                            </div>
+                            <div class="form-group col-sm-12 col-md-5 col-lg-5 col-xl-5">
+                                <input type="text" class="form-control" placeholder="Location">
+                            </div>
+                            <div class="form-group col-sm-6 offset-sm-3 col-md-2 offset-md-0 col-lg-2 col-xl-2">
+                                
+                                    <button type="Search" class="btn btn-primary">Search</button>
+                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        </div>
+     
+     <div class="container company-list">
+            
+        <!-- <div class="card-columns"> -->
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="legend-edit.jpg" class="card-img-top" alt="legend">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">Legend Cinema</h5>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="http://legend.com.kh/contactus.aspx" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="ione-edit.png" class="card-img-top" alt="IOne">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">iOne Co., Ltd</h5>
+                        <p class="card-text">iOne Co., Ltd is the chain-retailer of well-known brands for ICT products in Cambodia.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="https://www.ione2u.com" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="IDP.png" class="card-img-top" alt="IDP">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">IDP Education (Cambodia) Limited</h5>
+                        <p class="card-text">IDP Education (Cambodia) Ltd., with its global network of more than 70 offices in 34 countries, runs the leading ELT centre, Australian Centre for Education (ACE), which now operates on three campuses.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="https://www.idp.com/cambodia" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="kfc.jpg" class="card-img-top" alt="legend">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">KFC</h5>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="http://www.kfc.com.kh/en/contact-us/" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="ANZ.jpg" class="card-img-top" alt="ANZ">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">ANZ Royal Bank(Cambodia) Co.,Ltd.</h5>
+                        <p class="card-text">ANZ Royal has revolutionised the Cambodian financial market since opening in September 2005. The bank is a joint venture between Australia and New Zealand Banking Group Limited (ANZ), one of the largest banks in the world, and the Royal Group of Companies (RGC), one of Cambodia’s largest. ANZ holds 55% of ANZ Royal; the remaining 45% is owned by RGC. ANZ Royal was the first bank to offer a national network of ATMs as well as Internet Banking, providing a wide range of functionalities to support our philosophy of ‘making life easy’.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="https://www.anzroyal.com/" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="Sabay.png" class="card-img-top" alt="IDP">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">Sabay Digital Plus Co.,LTD.</h5>
+                        <p class="card-text">Sabay Digital Corporation LTD is Cambodia’s leading publisher of online entertainment and online content under the brand name Sabay. Our portfolio includes online and mobile games, web application development, mobile solutions, music and video distribution; SMS based content solutions and our online portal at http://sabay.com.kh.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="http://sabay.com.kh" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="total.png" class="card-img-top" alt="legend">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">Total Cambodge</h5>
+                        <p class="card-text">TOTAL is a leading energy player on the international stage, active across the old and gas value chain, from discovery and production to processing and marketing. We also produce chemicals and prepare for the energy transition by developing renewable energies, especially solar and biomass. Founded in 1993, TOTAL Cambodge is a subsidiary of the TOTAL Marketing & Services branch in Asia Pacific. It is one of the leading international oil companies in Cambodia and the only active in the distribution of all energy products: gasoline, diesel, jet-fuel, lubricant and solar lamps.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="http://www.total.com.kh/" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-2">
+                    <div class="card">
+                      <img src="nippon.JPG" class="card-img-top" alt="IOne">
+                      <hr>
+                      <div class="card-body">
+                        <h5 class="card-title">Nippon Express (Cambodia) Co.,Ltd.</h5>
+                        <p class="card-text">Nippon Express services continue to expand the globe, achieving a five-point framework across Japan, the Americas and Europe, and stretching into the rapidly developing markets of East Asia, South Asia and Oceania. We see our role as a logistics consultant, providing one-stop business solutions that connect people and companies beyond national and regional boundaries, through diverse logistics modes, integrating land, air, and marine transport with current 43 Countries 262 Cities 700 Locations 20,741 Employees.</p>
+                      </div>
+                      <div class="card-footer">
+                            <a href="#" class="card-link">Explore</a>
+                            <a href="http://www.nipponexpress.com/" class="card-link">Visit website</a>
+                      </div>
+                    </div>
+            </div>
+        </div>
+      </div>
+  </body>
+</html>
