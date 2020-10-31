@@ -1,11 +1,5 @@
-/*  I3-GIC ( Group : 4 )
-    Mini Project : Diary management system
-    Member :    1. Be David  (Group : A)
-                2. Ing David (Group : A)
-                3. Keat Chanmony (Group : A)
-                4. Sopheap Sopheadavid (Group : B)
-                5. Sorn Dane (Group : B)
-                6. Vong Pheaktrey (Group : B)
+/*  
+DIARY MANAGEMENT SYSTEM
 */
 #include <stdio.h>
 #include <conio.h>
