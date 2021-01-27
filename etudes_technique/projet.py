@@ -315,6 +315,9 @@ print(b)
 '''
 
 def evaluate_grobid(file_csv):
+    '''
+    Function to evaluate the performance of the grobid method 
+    '''
     file_read = pd.read_csv(file_csv)
     fail = 0
     for i, row in file_read.iterrows():
@@ -324,6 +327,8 @@ def evaluate_grobid(file_csv):
             extraction = tei_to_dict(xml)
             if extraction.get('title') != "" and extraction.get("abstract") != "" and extraction.get("body") != "":
                 print(i, " Extraction successful for title, abstract, and body text.")
+            else:
+                print("At least one of the title or abstract or body text cannot be extracted.")    
 
         except Exception as e:
             print(i,' Failed to process: ',pdf)
