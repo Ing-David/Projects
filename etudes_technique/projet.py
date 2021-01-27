@@ -201,7 +201,7 @@ def extract_reference_pubnote(el):
     return result
 
 def get_abstract(root):
-    return root.xpath('//tei:profileDesc/tei:abstract', namespaces=NS)
+    return root.xpath('//tei:profileDesc/tei:abstract/tei:p', namespaces=NS)
 
 def get_authors(root):
     return root.xpath('//tei:fileDesc//tei:author', namespaces=NS)
@@ -213,7 +213,7 @@ def get_references(root):
     return root.xpath('//tei:text//tei:listBibl/tei:biblStruct', namespaces=NS)
 
 def get_title(root):
-    return root.xpath('//tei:fileDesc/tei:titleStmt/tei:title', namespaces=NS)
+    return root.xpath('//tei:titleStmt/tei:title', namespaces=NS)
 
 def get_body(root):
     return root.xpath("//tei:body//text()", namespaces=NS)    
