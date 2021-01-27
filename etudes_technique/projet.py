@@ -15,7 +15,6 @@ import re
 import json
 import xmltodict
 import pandas as pd
-import urllib.request
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 from redis import Redis
@@ -46,32 +45,50 @@ def tei_to_dict(tei):
     parser = etree.XMLParser(encoding='UTF-8', recover=True)
     tei = tei if not isinstance(tei, text_type) else tei.encode('utf-8')
     root = etree.fromstring(tei, parser)
-
+    #dictionary
     result = {}
 
+    #Partie abstract
     abstract = get_abstract(root)
     if abstract and len(abstract) == 1:
         result['abstract'] = abstract[0].text
+    else:
+        result['abstract'] = ""
 
+    #Partie auteurs
     authors = get_authors(root)
     if authors:
         result['authors'] = list(map(element_to_author, authors))
+    else:
+        result['authors'] = ""
 
+    #Partie mots clés
     keywords = get_keywords(root)
     if keywords and len(keywords) == 1:
         result['keywords'] = extract_keywords(keywords[0])
+    else:
+        result['keywords'] = ""
 
+    #Partie titre    
     title = get_title(root)
     if title and len(title) == 1:
         result['title'] = title[0].text
-        
+    else:
+        result['title'] = ""
+
+    #Partie body    
     body = get_body(root)    
     if body:
-        result['body'] = " ".join(body)  
-
+        result['body'] = " ".join(body)
+    else:
+        result['body'] = ""
+    
+    #Partie references
     references = get_references(root)
     if references:
         result['references'] = list(map(element_to_reference, references))
+    else:
+        result['references'] = ""
 
     return result
 
@@ -184,7 +201,7 @@ def extract_reference_pubnote(el):
     return result
 
 def get_abstract(root):
-    return root.xpath('//tei:profileDesc/tei:abstract/tei:p', namespaces=NS)
+    return root.xpath('//tei:profileDesc/tei:abstract', namespaces=NS)
 
 def get_authors(root):
     return root.xpath('//tei:fileDesc//tei:author', namespaces=NS)
@@ -196,7 +213,7 @@ def get_references(root):
     return root.xpath('//tei:text//tei:listBibl/tei:biblStruct', namespaces=NS)
 
 def get_title(root):
-    return root.xpath('//tei:titleStmt/tei:title', namespaces=NS)
+    return root.xpath('//tei:fileDesc/tei:titleStmt/tei:title', namespaces=NS)
 
 def get_body(root):
     return root.xpath("//tei:body//text()", namespaces=NS)    
@@ -235,10 +252,11 @@ def descripteurs(url_agritrop):
             descripteurs_geo.append(key_word_2)
             
     return descripteurs_agrovoc, descripteurs_geo
-
+'''
 descripteurs_agrovoc, descripteurs_geo = descripteurs("https://agritrop.cirad.fr/551172")
 print(descripteurs_agrovoc)
 print(descripteurs_geo) 
+'''
 
 
 def response_entity_fishing(text):
@@ -288,11 +306,31 @@ def entities_agrovoc(dictionary):
     return l2
 
 
-
 '''
-xml = pdf_convert_xml('https://agritrop.cirad.fr/589364/')
+xml = pdf_convert_xml('http://agritrop.cirad.fr/551172/1/document_551172.pdf')
 dictionary = tei_to_dict(xml)
 a = response_entity_fishing(dictionary.get('body'))
 b = entities_linking(a)
 print(b)
 '''
+
+def evaluate_grobid(file_csv):
+    file_read = pd.read_csv(file_csv)
+    fail = 0
+    for i, row in file_read.iterrows():
+        pdf = row['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            extraction = tei_to_dict(xml)
+            if extraction.get('title') != "" and extraction.get("abstract") != "" and extraction.get("body") != "":
+                print(i, " Extraction successful for title, abstract, and body text.")
+
+        except Exception as e:
+            print(i,' Failed to process: ',pdf)
+            print("Error Type: ", e)
+            fail += 1      
+    print("Accuracy: ", (i + 1) - (fail/(i+1) )*100,"%")
+
+
+#evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
+#evaluate_grobid("corpus_titres_abstracts_corps_fre_articles-type_1_2_4_100_limit.csv")
