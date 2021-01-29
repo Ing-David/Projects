@@ -39,59 +39,27 @@ def pdf_convert_xml(pdf_link):
     xml = requests.post(url, files={'input': pdf.content})
     return xml.text
 
+#################################################
+# Helper functions
+#################################################
 
+def get_abstract(root):
+    return root.xpath('//tei:profileDesc/tei:abstract/tei:p', namespaces=NS)
 
-def tei_to_dict(tei):
-    parser = etree.XMLParser(encoding='UTF-8', recover=True)
-    tei = tei if not isinstance(tei, text_type) else tei.encode('utf-8')
-    root = etree.fromstring(tei, parser)
-    #dictionary
-    result = {}
+def get_authors(root):
+    return root.xpath('//tei:fileDesc//tei:author', namespaces=NS)
 
-    #Partie abstract
-    abstract = get_abstract(root)
-    if abstract and len(abstract) == 1:
-        result['abstract'] = abstract[0].text
-    else:
-        result['abstract'] = ""
+def get_keywords(root):
+    return root.xpath('//tei:profileDesc/tei:textClass/tei:keywords', namespaces=NS)
 
-    #Partie auteurs
-    authors = get_authors(root)
-    if authors:
-        result['authors'] = list(map(element_to_author, authors))
-    else:
-        result['authors'] = ""
+def get_references(root):
+    return root.xpath('//tei:text//tei:listBibl/tei:biblStruct', namespaces=NS)
 
-    #Partie mots clés
-    keywords = get_keywords(root)
-    if keywords and len(keywords) == 1:
-        result['keywords'] = extract_keywords(keywords[0])
-    else:
-        result['keywords'] = ""
+def get_title(root):
+    return root.xpath('//tei:titleStmt/tei:title', namespaces=NS)
 
-    #Partie titre    
-    title = get_title(root)
-    if title and len(title) == 1:
-        result['title'] = title[0].text
-    else:
-        result['title'] = ""
-
-    #Partie body    
-    body = get_body(root)    
-    if body:
-        result['body'] = " ".join(body)
-    else:
-        result['body'] = ""
-    
-    #Partie references
-    references = get_references(root)
-    if references:
-        result['references'] = list(map(element_to_reference, references))
-    else:
-        result['references'] = ""
-
-    return result
-
+def get_body(root):
+    return root.xpath("//tei:body//text()", namespaces=NS)   
 
 def element_to_author(el):
     result = {}
@@ -124,10 +92,8 @@ def element_to_author(el):
 
     return result
 
-
 def extract_keywords(el):
     return [{'value': e.text} for e in el.xpath('.//tei:term', namespaces=NS)]
-
 
 def element_to_reference(el):
     result = {}
@@ -142,7 +108,6 @@ def element_to_reference(el):
 
     return result
 
-
 def extract_reference_title(el):
     title = el.xpath(
         './/tei:analytic/tei:title[@level="a" and @type="main"]',
@@ -150,7 +115,6 @@ def extract_reference_title(el):
     )
     if title and len(title) == 1:
         return title[0].text
-
 
 def extract_reference_pubnote(el):
     result = {}
@@ -200,23 +164,65 @@ def extract_reference_pubnote(el):
 
     return result
 
-def get_abstract(root):
-    return root.xpath('//tei:profileDesc/tei:abstract/tei:p', namespaces=NS)
+#################################################
+# Main function
+#################################################
 
-def get_authors(root):
-    return root.xpath('//tei:fileDesc//tei:author', namespaces=NS)
+def tei_to_dict(tei):
+    '''
+    function to extract the data from xml format
+    '''
+    #pattern of xml tag
+    pattern = re.compile(r'<\?xml.*\?>')
+    #replace all the matching xml tag by ''  
+    xml = pattern.sub('', tei)
+    root = etree.fromstring(xml, base_url="http://www.tei-c.org/ns/1.0/")
+    #dictionary
+    result = {}
 
-def get_keywords(root):
-    return root.xpath('//tei:profileDesc/tei:textClass/tei:keywords', namespaces=NS)
+    #Partie abstract
+    abstract = get_abstract(root)
+    if abstract and len(abstract) == 1:
+        result['abstract'] = abstract[0].text
+    else:
+        result['abstract'] = ""
 
-def get_references(root):
-    return root.xpath('//tei:text//tei:listBibl/tei:biblStruct', namespaces=NS)
+    #Partie auteurs
+    authors = get_authors(root)
+    if authors:
+        result['authors'] = list(map(element_to_author, authors))
+    else:
+        result['authors'] = ""
 
-def get_title(root):
-    return root.xpath('//tei:titleStmt/tei:title', namespaces=NS)
+    #Partie mots clés
+    keywords = get_keywords(root)
+    if keywords and len(keywords) == 1:
+        result['keywords'] = extract_keywords(keywords[0])
+    else:
+        result['keywords'] = ""
 
-def get_body(root):
-    return root.xpath("//tei:body//text()", namespaces=NS)    
+    #Partie titre    
+    title = get_title(root)
+    if title and len(title) == 1:
+        result['title'] = title[0].text
+    else:
+        result['title'] = ""
+
+    #Partie body    
+    body = get_body(root)    
+    if body:
+        result['body'] = " ".join(body)
+    else:
+        result['body'] = ""
+    
+    #Partie references
+    references = get_references(root)
+    if references:
+        result['references'] = list(map(element_to_reference, references))
+    else:
+        result['references'] = ""
+
+    return result
 
 
 def descripteurs(url_agritrop):
@@ -319,23 +325,25 @@ def evaluate_grobid(file_csv):
     Function to evaluate the performance of the grobid method 
     '''
     file_read = pd.read_csv(file_csv)
-    fail = 0
+    success = 0
     for i, row in file_read.iterrows():
         pdf = row['ACCES_TEXTE_INTEGRAL']
         xml = pdf_convert_xml(pdf)
         try:
             extraction = tei_to_dict(xml)
-            if extraction.get('title') != "" and extraction.get("abstract") != "" and extraction.get("body") != "":
-                print(i, " Extraction successful for title, abstract, and body text.")
+            if (len(extraction.get("title"))!= 0) and (len(extraction.get("abstract"))!= 0) and (len(extraction.get("body"))!= 0):
+                print(i, "Title text, abstract text, and body text are successfully extracted.")
+                success += 1
             else:
-                print("At least one of the title or abstract or body text cannot be extracted.")    
+                print(i, " Fail to process abstract or body text: ",pdf)
+
 
         except Exception as e:
             print(i,' Failed to process: ',pdf)
             print("Error Type: ", e)
-            fail += 1      
-    print("Accuracy: ", (i + 1) - (fail/(i+1) )*100,"%")
+     
+    print("Accuracy: ", (success/(i+1))*100,"%")
 
 
-#evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
+evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
 #evaluate_grobid("corpus_titres_abstracts_corps_fre_articles-type_1_2_4_100_limit.csv")
