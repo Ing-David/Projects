@@ -300,19 +300,6 @@ def entities_linking(liste):
             pass
     return l
 
-
-def entities_agrovoc(dictionary):
-    '''
-    function that generate annotation concept id from the dictionary of entities-linking
-    '''
-    l = list()
-    for key in dictionary:
-        l.append(agrovoc.find_with_agrovoc(key))
-    #remove empty set in case there are no concepts matching between entity_fishing and agrovoc    
-    l2 = [x for x in l if x != set()]
-    return l2
-
-
 '''
 xml = pdf_convert_xml('http://agritrop.cirad.fr/551172/1/document_551172.pdf')
 dictionary = tei_to_dict(xml)
