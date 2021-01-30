@@ -258,6 +258,7 @@ def descripteurs(url_agritrop):
             descripteurs_geo.append(key_word_2)
             
     return descripteurs_agrovoc, descripteurs_geo
+
 '''
 descripteurs_agrovoc, descripteurs_geo = descripteurs("https://agritrop.cirad.fr/551172")
 print(descripteurs_agrovoc)
@@ -286,18 +287,18 @@ def knowledge_base(wikidataId):
 
     return urljoin(domaine_name,wikidataId)
 
-def entities_linking(dictionaire):
+def entities_linking(liste):
     '''
     function that extracts a text and generate some keywords with their correspond wikidata page (knowledge base)
     '''
-    entities_dict ={}
-    for item in dictionaire:
+    l = []
+    for item in liste:
         try:
-            entities_dict[item["rawName"]]= knowledge_base(item["wikidataId"])
+            couple = ( item["rawName"], knowledge_base(item["wikidataId"]) )
+            l.append(couple)           
         except:
             pass
-
-    return entities_dict
+    return l
 
 
 def entities_agrovoc(dictionary):
@@ -335,8 +336,7 @@ def evaluate_grobid(file_csv):
                 print(i, "Title text, abstract text, and body text are successfully extracted.")
                 success += 1
             else:
-                print(i, " Fail to process abstract or body text: ",pdf)
-
+                print(i, " Fail to process title or abstract or body text: ",pdf)
 
         except Exception as e:
             print(i,' Failed to process: ',pdf)
@@ -345,5 +345,5 @@ def evaluate_grobid(file_csv):
     print("Accuracy: ", (success/(i+1))*100,"%")
 
 
-evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
+#evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
 #evaluate_grobid("corpus_titres_abstracts_corps_fre_articles-type_1_2_4_100_limit.csv")
