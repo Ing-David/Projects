@@ -15,11 +15,14 @@ import re
 import json
 import xmltodict
 import pandas as pd
+import operator
+import math
 from lxml import etree
 from lxml.etree import XMLSyntaxError
 from redis import Redis
 from tqdm import tqdm
 from six import text_type
+from collections import Counter
 #for entities-fishing module for client
 from nerd import nerd_client
 #join url
@@ -300,14 +303,6 @@ def entities_linking(liste):
             pass
     return l
 
-'''
-xml = pdf_convert_xml('http://agritrop.cirad.fr/551172/1/document_551172.pdf')
-dictionary = tei_to_dict(xml)
-a = response_entity_fishing(dictionary.get('body'))
-b = entities_linking(a)
-print(b)
-'''
-
 def evaluate_grobid(file_csv):
     '''
     Function to evaluate the performance of the grobid method 
@@ -331,6 +326,86 @@ def evaluate_grobid(file_csv):
      
     print("Accuracy: ", (success/(i+1))*100,"%")
 
-
 #evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
 #evaluate_grobid("corpus_titres_abstracts_corps_fre_articles-type_1_2_4_100_limit.csv")
+
+def count_annotation(list_tuple):
+    '''
+    function that count all the annotations from the output of entities linking function
+    '''
+    annotation_list =[]
+    #put in list for all annotations
+    for annotation in list_tuple:
+        annotation_list.append(annotation[0])
+    #merge annotations regardless of the capital letters
+    orig = Counter(annotation_list)
+    lower = Counter(map(str.lower, annotation_list))
+    merge_list = {}
+    for k_orig in orig:
+        k_lower = k_orig.lower()
+        if lower[k_lower] == orig[k_orig]:
+            merge_list[k_orig] = orig[k_orig]
+        else:
+            merge_list[k_lower] = lower[k_lower]
+    #sort the annotations depends on how many times they appear in descending order
+    sorted_annotations = dict(sorted(merge_list.items(), key=operator.itemgetter(1),reverse=True) )
+
+    return sorted_annotations
+
+def sort_length_annotations(dictionary):
+    '''
+    function that sort the number of words of annotations in descending order
+    '''
+    new_dictionary ={}
+    keys = sorted(dictionary.keys(), key=lambda k: len(k.split()),reverse=True)
+    for k in keys:
+        new_dictionary[k] = dictionary[k]
+
+    return new_dictionary
+
+def Cvalue_score(dictionary):
+    '''
+    function to calculate the C-value score of annotations
+    '''
+
+    new_dictionary = {}
+    found = 0
+    sub_key = 0
+    for k,v in dictionary.items():
+        for k2,v2 in dictionary.items():
+            if k != k2 and k in k2:
+                found += 1
+                for k3,v3 in dictionary.items():
+                    if k2 != k and k2 != k3 and k2 in k3:         
+                        sub_key += v2 - v3
+                        break
+                    else:
+                        sub_key += v2
+                        break
+                
+        #not nested annotations          
+        if found == 0:
+            c_value =  float((math.log(len(k.split()),2))) * v 
+            new_dictionary[k] = c_value  
+
+        #nested annotations
+        else:   
+            c_value =  float((math.log(len(k.split()),2))) * (v - ( (1/found)*sub_key ) ) 
+            new_dictionary[k] = c_value
+            found = 0
+            sub_key = 0 
+
+    sorted_score_dictionary = dict( sorted(new_dictionary.items(), key=operator.itemgetter(1),reverse=True))
+
+    return sorted_score_dictionary
+
+'''
+xml = pdf_convert_xml('http://agritrop.cirad.fr/557447/1/document_557447.pdf')
+dictionary = tei_to_dict(xml)
+a = response_entity_fishing(dictionary.get('abstract'))
+b = entities_linking(a)
+c = count_annotation(b)
+d = sort_length_annotations(c)
+e = Cvalue_score(d)
+print(e)
+'''
