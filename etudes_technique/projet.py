@@ -167,6 +167,15 @@ def extract_reference_pubnote(el):
 
     return result
 
+def rm_suffix(s,suffixes):
+    '''
+    Helper function for OldScoreNcbo 
+    '''
+    for suf in suffixes:
+       if s.endswith(suf):
+          return s[:-len(suf)]
+    return s
+
 #################################################
 # Main function
 #################################################
@@ -230,7 +239,8 @@ def tei_to_dict(tei):
 
 def descripteurs(url_agritrop):
     '''
-    function that extracts the description of agrovoc and geographical (i.e. the key word of agrovoc and geographical)
+    function that extracts the description of agrovoc and geographical 
+    (i.e. the key word of agrovoc and geographical)
     '''
     descripteurs_agrovoc = []
     descripteurs_geo = []
@@ -363,11 +373,26 @@ def sort_length_annotations(dictionary):
 
     return new_dictionary
 
+def OldScoreNcbo(dictionary):
+    '''
+    function that generate Old Annotator scoring method
+    '''
+    new_dictionary = {}
+    key_set = set(dictionary)
+    for k,v in dictionary.items():
+        #concept's symnonym
+        if ( k.endswith( ('es','s','S') )) and (rm_suffix(k, ('es','s','S') ) in key_set):
+            new_dictionary[k] = 8*v
+        #concept's preferred name
+        else:
+            new_dictionary[k]= 10*v
+
+    return new_dictionary     
+
 def Cvalue_score(dictionary):
     '''
     function to calculate the C-value score of annotations
     '''
-
     new_dictionary = {}
     found = 0
     sub_key = 0
@@ -375,37 +400,59 @@ def Cvalue_score(dictionary):
         for k2,v2 in dictionary.items():
             if k != k2 and k in k2:
                 found += 1
+                #loop to delete all the nested terms
                 for k3,v3 in dictionary.items():
-                    if k2 != k and k2 != k3 and k2 in k3:         
-                        sub_key += v2 - v3
-                        break
-                    else:
-                        sub_key += v2
-                        break
-                
+                    if k2 != k and k2 != k3 and k2 in k3:
+                        #first, delete all the nested frenquency terms         
+                        sub_key += -v3
+                #finally, add that nested terms frequency        
+                sub_key += v2                                
         #not nested annotations          
         if found == 0:
             c_value =  float((math.log(len(k.split()),2))) * v 
             new_dictionary[k] = c_value  
 
         #nested annotations
-        else:   
+        else: 
             c_value =  float((math.log(len(k.split()),2))) * (v - ( (1/found)*sub_key ) ) 
             new_dictionary[k] = c_value
             found = 0
-            sub_key = 0 
+            sub_key = 0
 
-    sorted_score_dictionary = dict( sorted(new_dictionary.items(), key=operator.itemgetter(1),reverse=True))
+    return new_dictionary
+
+
+def ScoreNcboCvalue(dictionary_Cvalue,dictionary_OldScoreNcbo):
+    '''
+    function that generates ScoreNcboCvalue method
+    '''
+    new_dictionary = {}
+    c_value = 0
+    for k,v in dictionary_Cvalue.items():
+        for k1,v1 in dictionary_Cvalue.items():
+            if k != k1 and k in k1:
+                c_value += v1
+        
+        if c_value != 0:
+            new_dictionary[k] = float (math.log(dictionary_OldScoreNcbo[k],10)) * c_value
+            c_value = 0
+        else:
+            new_dictionary[k] = float (math.log(dictionary_OldScoreNcbo[k],10))
+
+    sorted_score_dictionary = dict(sorted(new_dictionary.items(), key=operator.itemgetter(1),reverse=True))
 
     return sorted_score_dictionary
 
 '''
 xml = pdf_convert_xml('http://agritrop.cirad.fr/557447/1/document_557447.pdf')
 dictionary = tei_to_dict(xml)
-a = response_entity_fishing(dictionary.get('abstract'))
+a = response_entity_fishing(dictionary.get('body'))
 b = entities_linking(a)
 c = count_annotation(b)
 d = sort_length_annotations(c)
 e = Cvalue_score(d)
+f = OldScoreNcbo(d)
 print(e)
+g = ScoreNcboCvalue(e,f)
+print(g)
 '''
