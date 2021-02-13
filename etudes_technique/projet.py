@@ -29,6 +29,11 @@ from nerd import nerd_client
 from urllib.parse import urljoin
 #for disable logger debug
 import logging.config
+#for generate the statistic of precison, recall, and f1-score
+from scipy import stats
+import statistics
+import operator
+
 
 NS = {'tei': 'http://www.tei-c.org/ns/1.0'}
 
@@ -167,14 +172,11 @@ def extract_reference_pubnote(el):
 
     return result
 
-def rm_suffix(s,suffixes):
+def contains_word(s, w):
     '''
-    Helper function for OldScoreNcbo 
+       boolean function to verify whether a word contain subword or not
     '''
-    for suf in suffixes:
-       if s.endswith(suf):
-          return s[:-len(suf)]
-    return s
+    return f' {w} ' in f' {s} '
 
 #################################################
 # Main function
@@ -269,16 +271,14 @@ def descripteurs(url_agritrop):
         if (pattern2.findall(d)):
             key_word_2 = d.replace('agrovoc_geo_motcle:','')
             descripteurs_geo.append(key_word_2)
-            
-    return descripteurs_agrovoc, descripteurs_geo
+
+    descripteurs = descripteurs_agrovoc + descripteurs_geo
+
+    return descripteurs
 
 '''
-descripteurs_agrovoc, descripteurs_geo = descripteurs("https://agritrop.cirad.fr/551172")
-print(descripteurs_agrovoc)
-print(descripteurs_geo) 
+descripteurs = descripteurs("https://agritrop.cirad.fr/551172")
 '''
-
-
 def response_entity_fishing(text):
     '''
     function that can use entity-fishing online: https://github.com/hirmeos/entity-fishing-client-python
@@ -312,32 +312,6 @@ def entities_linking(liste):
         except:
             pass
     return l
-
-def evaluate_grobid(file_csv):
-    '''
-    Function to evaluate the performance of the grobid method 
-    '''
-    file_read = pd.read_csv(file_csv)
-    success = 0
-    for i, row in file_read.iterrows():
-        pdf = row['ACCES_TEXTE_INTEGRAL']
-        xml = pdf_convert_xml(pdf)
-        try:
-            extraction = tei_to_dict(xml)
-            if (len(extraction.get("title"))!= 0) and (len(extraction.get("abstract"))!= 0) and (len(extraction.get("body"))!= 0):
-                print(i, "Title text, abstract text, and body text are successfully extracted.")
-                success += 1
-            else:
-                print(i, " Fail to process title or abstract or body text: ",pdf)
-
-        except Exception as e:
-            print(i,' Failed to process: ',pdf)
-            print("Error Type: ", e)
-     
-    print("Accuracy: ", (success/(i+1))*100,"%")
-
-#evaluate_grobid("corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv")
-#evaluate_grobid("corpus_titres_abstracts_corps_fre_articles-type_1_2_4_100_limit.csv")
 
 def count_annotation(list_tuple):
     '''
@@ -380,12 +354,8 @@ def OldScoreNcbo(dictionary):
     new_dictionary = {}
     key_set = set(dictionary)
     for k,v in dictionary.items():
-        #concept's symnonym
-        if ( k.endswith( ('es','s','S') )) and (rm_suffix(k, ('es','s','S') ) in key_set):
-            new_dictionary[k] = 8*v
         #concept's preferred name
-        else:
-            new_dictionary[k]= 10*v
+        new_dictionary[k]= 10*v
 
     return new_dictionary     
 
@@ -402,12 +372,12 @@ def Cvalue_score(dictionary):
                 found += 1
                 #loop to delete all the nested terms
                 for k3,v3 in dictionary.items():
-                    if k2 != k and k2 != k3 and k2 in k3:
+                    if k2 != k and k2 != k3 and contains_word(k3,k2):
                         #first, delete all the nested frenquency terms         
                         sub_key += -v3
                 #finally, add that nested terms frequency        
                 sub_key += v2                                
-        #not nested annotations          
+        #annotations not nested        
         if found == 0:
             c_value =  float((math.log(len(k.split()),2))) * v 
             new_dictionary[k] = c_value  
@@ -443,16 +413,314 @@ def ScoreNcboCvalue(dictionary_Cvalue,dictionary_OldScoreNcbo):
 
     return sorted_score_dictionary
 
-'''
-xml = pdf_convert_xml('http://agritrop.cirad.fr/557447/1/document_557447.pdf')
-dictionary = tei_to_dict(xml)
-a = response_entity_fishing(dictionary.get('body'))
-b = entities_linking(a)
-c = count_annotation(b)
-d = sort_length_annotations(c)
-e = Cvalue_score(d)
-f = OldScoreNcbo(d)
-print(e)
-g = ScoreNcboCvalue(e,f)
-print(g)
-'''
+
+#################################################
+# Evaluation function
+#################################################
+
+def evaluate_globid_title(file_csv):
+    '''
+    Function to evaluate the performance of the grobid method based on Title
+    '''
+    file_read = pd.read_csv(file_csv)
+    success = 0
+    for i, row in file_read.iterrows():
+        pdf = row['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            extraction = tei_to_dict(xml)
+            if (len(extraction.get("title"))!= 0):
+                print(i, "Title text is successfully extracted.")
+                success += 1
+            else:
+                print(i, " Fail to process title's text: ",pdf)
+
+        except Exception as e:
+            print(i,' Failed to process: ',pdf)
+            print("Error Type: ", e)
+     
+    print("Accuracy's title text: ", (success/(i+1))*100,"%")
+
+def evaluate_globid_abstract(file_csv):
+    '''
+    Function to evaluate the performance of the grobid method based on Abstract    
+    '''
+    file_read = pd.read_csv(file_csv)
+    success = 0
+    for i, row in file_read.iterrows():
+        pdf = row['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            extraction = tei_to_dict(xml)
+            if (len(extraction.get("abstract"))!= 0):
+                print(i, "Abstract text is successfully extracted.")
+                success += 1
+            else:
+                print(i, " Fail to process abstract's text: ",pdf)
+
+        except Exception as e:
+            print(i,' Failed to process: ',pdf)
+            print("Error Type: ", e)
+     
+    print("Accuracy's abstract text: ", (success/(i+1))*100,"%")
+
+def evaluate_grobid_body(file_csv):
+    '''
+    Function to evaluate the performance of the grobid method based on Body's text
+    '''
+    file_read = pd.read_csv(file_csv)
+    success = 0
+    for i, row in file_read.iterrows():
+        pdf = row['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            extraction = tei_to_dict(xml)
+            if (len(extraction.get("body"))!= 0):
+                print(i, "Body text is successfully extracted.")
+                success += 1
+            else:
+                print(i, " Fail to process body's text: ",pdf)
+
+        except Exception as e:
+            print(i,' Failed to process: ',pdf)
+            print("Error Type: ", e)
+     
+    print("Accuracy's body text: ", (success/(i+1))*100,"%")
+
+def evaluate_grobid_ensemble(file_csv):
+    '''
+    Function to evaluate the performance of the grobid method based on Title, Abstract, and Body text together
+    '''
+    file_read = pd.read_csv(file_csv)
+    success = 0
+    for i, row in file_read.iterrows():
+        pdf = row['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            extraction = tei_to_dict(xml)
+            if (len(extraction.get("title"))!= 0) and (len(extraction.get("abstract"))!= 0) and (len(extraction.get("body"))!= 0):
+                print(i, "Title text, abstract text, and body text are successfully extracted.")
+                success += 1
+            else:
+                print(i, " Fail to process title or abstract or body text: ",pdf)
+
+        except Exception as e:
+            print(i,' Failed to process: ',pdf)
+            print("Error Type: ", e)
+     
+    print("Accuracy: ", (success/(i+1))*100,"%")
+
+
+def evaluation_sans_filtre(file_csv,text_choice):
+    '''
+    Evaluation the concepts generate with description global
+    arg text_choice: can be 'abstract' or 'body'
+    '''
+    dictionary={}
+    file_read = pd.read_csv(file_csv)
+
+    for line, column in file_read.iterrows():
+        found = 0
+        pdf = column['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            a = tei_to_dict(xml)
+            b = response_entity_fishing(a.get(text_choice))
+            c = entities_linking(b)
+            d = count_annotation(c)
+            e = list(d.keys())
+            #list of annotations generated
+            f = [x.lower() for x in e]           
+            g = column['DESCRIPTEURS_ANGLAIS']
+            #convert to list
+            h = g.split(";")
+            #remove space between each string
+            i = [x.strip(' ') for x in h]
+            #global descriptions
+            j = [x.lower() for x in i]
+            if len(j) > 0:
+                #intersection between relevant documents and retrieved documents
+                intersect = list(set(j).intersection(set(f)))
+                found = len(intersect)
+                evaluation = {}                  
+                evaluation["precision"] = found/(len(e))
+                evaluation["recall"] = found/(len(j))
+                evaluation["f1_score"] = (2*evaluation["precision"]*evaluation["recall"])/(evaluation["precision"]+evaluation["recall"])
+                dictionary["Publication"+str(line+1)] = evaluation
+        
+            else:
+                print("No global descriptions to calculate the scores.")
+
+        except Exception as error:
+            print(error)
+
+    return dictionary
+
+#evaluation_sans_filtre('corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv','body')
+
+def statistic_evaluation(nested_dictionary):
+    '''
+    fonction to generate the statistic value for all values of precision, recall, 
+    and f1-score from all the publications using nested dictionary from function **evaluation_sans_filtre**
+    '''
+    precision_list = []
+    recall_list = []
+    f1_score_list = []
+    for k,v in dictionary.items():
+        precision_list.append(v["precision"])
+        recall_list.append(v["recall"])
+        f1_score_list.append(v["f1_score"])
+
+    #statistic analysis    
+    precision_statistic = stats.describe(precision_list)
+    recall_statistic = stats.describe(recall_list)
+    f1_score_statistic = stats.describe(f1_score_list)
+
+    return precision_statistic, recall_statistic, f1_score_statistic
+
+def f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,threshold):   
+    '''
+    function to calcute mean value of f1_score with k concepts assignment
+
+    arg limit_line: limit line in csv file
+    arg text_choice: can be abstract or body
+    arg threshold: top k concepts 
+
+    '''
+
+    file_read = pd.read_csv(file_csv)
+    f1_score_Cvalue_list = []
+    for line, column in file_read.iterrows():
+        if (line < limit_line):
+            found = 0
+            precision = 0
+            recall = 0
+            f1_score = 0
+            pdf = column['ACCES_TEXTE_INTEGRAL']
+            xml = pdf_convert_xml(pdf)
+            try:
+                a = tei_to_dict(xml)
+                b = response_entity_fishing(a.get(text_choice))
+                c = entities_linking(b)
+                d = count_annotation(c)
+                e = sort_length_annotations(d)
+                f = Cvalue_score(e)
+                #sorted CvalueScore
+                g = dict(sorted(f.items(), key=operator.itemgetter(1),reverse=True))
+                #select top k threshold concepts
+                h = list(g.keys())[:threshold]
+                i = [x.lower() for x in h]
+                #part global descriptions
+                j = column['DESCRIPTEURS_ANGLAIS']
+                #convert to list
+                k = j.split(";")
+                #remove space between each string
+                l = [x.strip(' ') for x in k]
+                #global descriptions
+                m = [x.lower() for x in l]
+                if len(m) > 0:
+                    intersect = list(set(m).intersection(set(i)))
+                    found = len(intersect)
+                    if (found > 0):
+                        precision = found/(len(i))
+                        recall = found/(len(m))
+                        f1_score = (2*precision*recall)/(precision+recall)
+                        f1_score_Cvalue_list.append(f1_score)
+                    else:
+                        f1_score_Cvalue_list.append(0)
+                else:
+                    print("No global descriptions to compare.")
+            except Exception as error:
+                print(error)
+
+    mean_f1_Cvalue_score = statistics.mean(f1_score_Cvalue_list)
+
+    return mean_f1_Cvalue_score
+
+#f1_score_top_k_concepts_Cvalue_score('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',10)
+
+def f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,threshold):   
+    '''
+    function to calcute mean value of f1_score with k concepts assignment
+
+    arg limit_line: limit line in csv file
+    arg text_choice: can be abstract or body
+    arg threshold: top k concepts 
+
+    '''
+
+    file_read = pd.read_csv(file_csv)
+    f1_score_NcboCvalue_list = []
+
+    for line, column in file_read.iterrows():
+        if (line < limit_line):
+            found = 0
+            precision = 0
+            recall = 0
+            f1_score = 0
+            pdf = column['ACCES_TEXTE_INTEGRAL']
+            xml = pdf_convert_xml(pdf)
+            try:
+                a = tei_to_dict(xml)
+                b = response_entity_fishing(a.get(text_choice))
+                c = entities_linking(b)
+                d = count_annotation(c)
+                e = sort_length_annotations(d)
+                f = OldScoreNcbo(e)
+                g = Cvalue_score(e)
+                h = ScoreNcboCvalue(g,f)               
+                #select top k threshold concepts
+                i = list(h.keys())[:threshold]
+                j = [x.lower() for x in i]               
+                #part global descriptions 
+                k = column['DESCRIPTEURS_ANGLAIS']
+                #convert to list
+                l = k.split(";")
+                #remove space between each string
+                m = [x.strip(' ') for x in l]
+                #global descriptions
+                n = [x.lower() for x in m]
+                if len(n) > 0:
+                    intersect = list(set(n).intersection(set(j)))
+                    found = len(intersect)
+                    if (found > 0):
+                        precision = found/(len(j))
+                        recall = found/(len(n))
+                        f1_score = (2*precision*recall)/(precision+recall)
+                        f1_score_NcboCvalue_list.append(f1_score)
+                    else:
+                        f1_score_NcboCvalue_list.append(0)
+                else:
+                    print("No global descriptions to compare.")
+            except Exception as error:
+                print(error)
+
+    mean_f1_NcboCvalue_score = statistics.mean(f1_score_NcboCvalue_list)
+
+    return mean_f1_NcboCvalue_score
+
+def compare_top_k_concept_Cvalue_score(file_csv,limit_line,text_choice,threshold_value):
+    '''
+    function to choose the best top k concepts with the Cvalue scoring method
+    '''
+
+    compare_dictionary = {}
+    for i in threshold_value:
+        compare_dictionary[i] = f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,i)
+    
+    best_top_k_concept = max(compare_dictionary.iteritems(), key=operator.itemgetter(1))[0]
+    
+    return best_top_k_concept
+
+def compare_top_k_concept_NcboCvalue(file_csv,limit_line,text_choice,threshold_value):
+    '''
+    function to choose the best top k concepts with the NcboCvalue scoring method
+    '''    
+    compare_dictionary = {}
+
+    for i in threshold_value:
+        compare_dictionary[i] = f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,i)
+    
+    best_top_k_concept = max(compare_dictionary.iteritems(), key=operator.itemgetter(1))[0]
+    
+    return best_top_k_concept
