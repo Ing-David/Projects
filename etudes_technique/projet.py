@@ -511,52 +511,58 @@ def evaluate_grobid_ensemble(file_csv):
     print("Accuracy: ", (success/(i+1))*100,"%")
 
 
-def evaluation_sans_filtre(file_csv,text_choice):
+def evaluation_sans_filtre(file_csv,limit_line,text_choice):
     '''
     Evaluation the concepts generate with description global
+    arg file csv: input csv file
+    arg limit_line: limit publications in csv file
     arg text_choice: can be 'abstract' or 'body'
     '''
     dictionary={}
     file_read = pd.read_csv(file_csv)
 
     for line, column in file_read.iterrows():
-        found = 0
-        pdf = column['ACCES_TEXTE_INTEGRAL']
-        xml = pdf_convert_xml(pdf)
-        try:
-            a = tei_to_dict(xml)
-            b = response_entity_fishing(a.get(text_choice))
-            c = entities_linking(b)
-            d = count_annotation(c)
-            e = list(d.keys())
-            #list of annotations generated
-            f = [x.lower() for x in e]           
-            g = column['DESCRIPTEURS_ANGLAIS']
-            #convert to list
-            h = g.split(";")
-            #remove space between each string
-            i = [x.strip(' ') for x in h]
-            #global descriptions
-            j = [x.lower() for x in i]
-            if len(j) > 0:
-                #intersection between relevant documents and retrieved documents
-                intersect = list(set(j).intersection(set(f)))
-                found = len(intersect)
-                evaluation = {}                  
-                evaluation["precision"] = found/(len(e))
-                evaluation["recall"] = found/(len(j))
-                evaluation["f1_score"] = (2*evaluation["precision"]*evaluation["recall"])/(evaluation["precision"]+evaluation["recall"])
-                dictionary["Publication"+str(line+1)] = evaluation
-        
-            else:
-                print("No global descriptions to calculate the scores.")
+        if(line < limit_line):
+            found = 0
+            pdf = column['ACCES_TEXTE_INTEGRAL']
+            xml = pdf_convert_xml(pdf)
+            try:
+                a = tei_to_dict(xml)
+                b = response_entity_fishing(a.get(text_choice))
+                c = entities_linking(b)
+                d = count_annotation(c)
+                e = list(d.keys())
+                #list of annotations generated
+                f = [x.lower() for x in e]           
+                g = column['DESCRIPTEURS_ANGLAIS']
+                #convert to list
+                h = g.split(";")
+                #remove space between each string
+                i = [x.strip(' ') for x in h]
+                #global descriptions
+                j = [x.lower() for x in i]
+                if len(j) > 0:
+                    #intersection between relevant documents and retrieved documents
+                    intersect = list(set(j).intersection(set(f)))
+                    found = len(intersect)
+                    evaluation = {}                  
+                    evaluation["precision"] = found/(len(e))
+                    evaluation["recall"] = found/(len(j))
+                    evaluation["f1_score"] = (2*evaluation["precision"]*evaluation["recall"])/(evaluation["precision"]+evaluation["recall"])
+                    dictionary["Publication"+str(line+1)] = evaluation
+            
+                else:
+                    print("No global descriptions to calculate the scores.")
 
-        except Exception as error:
-            print(error)
-
+            except Exception as error:
+                print(error)
+        else:
+            break
     return dictionary
 
-#evaluation_sans_filtre('corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv','body')
+result = evaluation_sans_filtre('corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv',5,'body')
+print(result)
+
 
 def statistic_evaluation(nested_dictionary):
     '''
@@ -582,14 +588,13 @@ def f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,thresho
     '''
     function to calcute mean value of f1_score with k concepts assignment
 
-    arg limit_line: limit line in csv file
+    arg limit_line: limit publications in csv file
     arg text_choice: can be abstract or body
     arg threshold: top k concepts 
-
     '''
-
     file_read = pd.read_csv(file_csv)
     f1_score_Cvalue_list = []
+
     for line, column in file_read.iterrows():
         if (line < limit_line):
             found = 0
@@ -607,8 +612,15 @@ def f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,thresho
                 f = Cvalue_score(e)
                 #sorted CvalueScore
                 g = dict(sorted(f.items(), key=operator.itemgetter(1),reverse=True))
-                #select top k threshold concepts
-                h = list(g.keys())[:threshold]
+                #length of all annotations
+                length_annotation = len(g)
+
+                if threshold < length_annotation:
+                    #select top k threshold concepts
+                    h = list(g.keys())[:threshold]
+                else:
+                    h = list(g.keys())[:length_annotation]
+
                 i = [x.lower() for x in h]
                 #part global descriptions
                 j = column['DESCRIPTEURS_ANGLAIS']
@@ -632,6 +644,8 @@ def f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,thresho
                     print("No global descriptions to compare.")
             except Exception as error:
                 print(error)
+        else:
+            break
 
     mean_f1_Cvalue_score = statistics.mean(f1_score_Cvalue_list)
 
@@ -643,10 +657,9 @@ def f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,threshold
     '''
     function to calcute mean value of f1_score with k concepts assignment
 
-    arg limit_line: limit line in csv file
+    arg limit_line: limit publications in csv file
     arg text_choice: can be abstract or body
     arg threshold: top k concepts 
-
     '''
 
     file_read = pd.read_csv(file_csv)
@@ -669,8 +682,13 @@ def f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,threshold
                 f = OldScoreNcbo(e)
                 g = Cvalue_score(e)
                 h = ScoreNcboCvalue(g,f)               
+                #length of all annotations
+                length_annotation = len(h)
                 #select top k threshold concepts
-                i = list(h.keys())[:threshold]
+                if threshold < length_annotation:
+                    i = list(h.keys())[:threshold]
+                else:
+                    i = list(h.keys())[:length_annotation]
                 j = [x.lower() for x in i]               
                 #part global descriptions 
                 k = column['DESCRIPTEURS_ANGLAIS']
@@ -690,10 +708,13 @@ def f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,threshold
                         f1_score_NcboCvalue_list.append(f1_score)
                     else:
                         f1_score_NcboCvalue_list.append(0)
+
                 else:
                     print("No global descriptions to compare.")
             except Exception as error:
                 print(error)
+        else:
+            break
 
     mean_f1_NcboCvalue_score = statistics.mean(f1_score_NcboCvalue_list)
 
@@ -703,14 +724,14 @@ def compare_top_k_concept_Cvalue_score(file_csv,limit_line,text_choice,threshold
     '''
     function to choose the best top k concepts with the Cvalue scoring method
     '''
-
     compare_dictionary = {}
+
     for i in threshold_value:
         compare_dictionary[i] = f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,i)
     
     best_top_k_concept = max(compare_dictionary.items(), key=operator.itemgetter(1))[0]
     
-    return int(best_top_k_concept)
+    return best_top_k_concept
 
 def compare_top_k_concept_NcboCvalue(file_csv,limit_line,text_choice,threshold_value):
     '''
@@ -723,4 +744,134 @@ def compare_top_k_concept_NcboCvalue(file_csv,limit_line,text_choice,threshold_v
     
     best_top_k_concept = max(compare_dictionary.items(), key=operator.itemgetter(1))[0]
     
-    return int(best_top_k_concept)
+    return best_top_k_concept
+
+
+def calcul_score_best_k_concepts_Cvalue(file_csv,border_row,text_choice,threshold_value):
+
+    '''
+    function to calculate the final f1-score using Cvalue method on the test set after finding the best K concepts that maximize the f1-score
+
+    arg border_row: eg. if there are 1000 rows in the csv file and we set its value to 400 it will calculate the best top k concepts on the 400 rows for validation test, 
+    and the remaining(i.e. 600 rows) it will calculate the final f1-score
+    arg text_choice: it can be abstract or body text
+    arg threshold: is the value of testing top k concepts setting to run 
+    '''
+    
+    best_k_concepts = compare_top_k_concept_Cvalue_score(file_csv,border_row,text_choice,threshold_value)
+
+    #Calculate the final score on the test set
+    file_read = pd.read_csv(file_csv)
+    f1_score_Cvalue_test_list = []
+
+    for line, column in file_read.iloc[border_row:].iterrows():
+        found = 0
+        precision = 0
+        recall = 0
+        f1_score = 0
+        pdf = column['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            a = tei_to_dict(xml)
+            b = response_entity_fishing(a.get(text_choice))
+            c = entities_linking(b)
+            d = count_annotation(c)
+            e = sort_length_annotations(d)
+            f = Cvalue_score(e)
+            #sorted CvalueScore
+            g = dict(sorted(f.items(), key=operator.itemgetter(1),reverse=True))
+            h = list(g.keys())[:best_k_concepts]
+            i = [x.lower() for x in h]
+            #part global descriptions
+            j = column['DESCRIPTEURS_ANGLAIS']
+            #convert to list
+            k = j.split(";")
+            #remove space between each string
+            l = [x.strip(' ') for x in k]
+            #global descriptions
+            m = [x.lower() for x in l]
+            if len(m) > 0:
+                intersect = list(set(m).intersection(set(i)))
+                found = len(intersect)
+                if (found > 0):
+                    precision = found/(len(i))
+                    recall = found/(len(m))
+                    f1_score = (2*precision*recall)/(precision+recall)
+                    f1_score_Cvalue_test_list.append(f1_score)
+                else:
+                    f1_score_Cvalue_test_list.append(0)
+            else:
+                print("No global descriptions to compare.")
+
+        except Exception as error:
+            print(error)
+                
+    mean_f1_Cvalue_score_test_set = statistics.mean(f1_score_Cvalue_test_list)
+
+    return mean_f1_Cvalue_score_test_set
+
+def calcul_score_best_k_concepts_NcboCvalue(file_csv,border_row,text_choice,threshold_value):
+    '''
+    function to calculate the final f1-score using NCboCvalue method on the test set after finding the best K concepts that maximize the f1-score
+
+    arg border_row: eg. if there are 1000 rows in the csv file and we set its value to 400 it will calculate the best top k concepts on the 400 rows for validation test, 
+    and the remaining(i.e. 600 rows) it will calculate the final f1-score
+    arg text_choice: it can be abstract or body text
+    arg threshold: is the value of testing top k concepts setting to run 
+    '''
+    best_k_concepts = compare_top_k_concept_NcboCvalue(file_csv,border_row,text_choice,threshold_value)
+
+    file_read = pd.read_csv(file_csv)
+    f1_score_NcboCvalue_test_list = []
+
+    for line, column in file_read.iloc[border_row:].iterrows():
+        found = 0
+        precision = 0
+        recall = 0
+        f1_score = 0
+        pdf = column['ACCES_TEXTE_INTEGRAL']
+        xml = pdf_convert_xml(pdf)
+        try:
+            a = tei_to_dict(xml)
+            b = response_entity_fishing(a.get(text_choice))
+            c = entities_linking(b)
+            d = count_annotation(c)
+            e = sort_length_annotations(d)
+            f = OldScoreNcbo(e)
+            g = Cvalue_score(e)
+            h = ScoreNcboCvalue(g,f)               
+            i = list(h.keys())[:best_k_concepts]
+            j = [x.lower() for x in i]               
+            #part global descriptions 
+            k = column['DESCRIPTEURS_ANGLAIS']
+            #convert to list
+            l = k.split(";")
+            #remove space between each string
+            m = [x.strip(' ') for x in l]
+            #global descriptions
+            n = [x.lower() for x in m]
+            if len(n) > 0:
+                intersect = list(set(n).intersection(set(j)))
+                found = len(intersect)
+                if (found > 0):
+                    precision = found/(len(j))
+                    recall = found/(len(n))
+                    f1_score = (2*precision*recall)/(precision+recall)
+                    f1_score_NcboCvalue_test_list.append(f1_score)
+                else:
+                    f1_score_NcboCvalue_test_list.append(0)
+
+            else:
+                print("No global descriptions to compare.")
+        except Exception as error:
+            print(error)
+        
+    mean_f1_NcboCvalue_score_test_set = statistics.mean(f1_score_NcboCvalue_test_list)
+
+    return mean_f1_NcboCvalue_score_test_set
+
+
+'''
+mean_f1_score_Cvalue_test_set = calcul_score_best_k_concepts_Cvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10]) 
+mean_f1_score_NCboCvalue_test_set = calcul_score_best_k_concepts_NcboCvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10])
+'''
