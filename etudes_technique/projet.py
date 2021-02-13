@@ -708,9 +708,9 @@ def compare_top_k_concept_Cvalue_score(file_csv,limit_line,text_choice,threshold
     for i in threshold_value:
         compare_dictionary[i] = f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,i)
     
-    best_top_k_concept = max(compare_dictionary.iteritems(), key=operator.itemgetter(1))[0]
+    best_top_k_concept = max(compare_dictionary.items(), key=operator.itemgetter(1))[0]
     
-    return best_top_k_concept
+    return int(best_top_k_concept)
 
 def compare_top_k_concept_NcboCvalue(file_csv,limit_line,text_choice,threshold_value):
     '''
@@ -721,6 +721,6 @@ def compare_top_k_concept_NcboCvalue(file_csv,limit_line,text_choice,threshold_v
     for i in threshold_value:
         compare_dictionary[i] = f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,i)
     
-    best_top_k_concept = max(compare_dictionary.iteritems(), key=operator.itemgetter(1))[0]
+    best_top_k_concept = max(compare_dictionary.items(), key=operator.itemgetter(1))[0]
     
-    return best_top_k_concept
+    return int(best_top_k_concept)
