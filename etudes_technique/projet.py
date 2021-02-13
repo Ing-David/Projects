@@ -560,10 +560,6 @@ def evaluation_sans_filtre(file_csv,limit_line,text_choice):
             break
     return dictionary
 
-result = evaluation_sans_filtre('corpus_titres_abstracts_corps_eng_articles-type_1_2_4_100_limit.csv',5,'body')
-print(result)
-
-
 def statistic_evaluation(nested_dictionary):
     '''
     fonction to generate the statistic value for all values of precision, recall, 
@@ -650,8 +646,6 @@ def f1_score_top_k_concepts_Cvalue_score(file_csv,limit_line,text_choice,thresho
     mean_f1_Cvalue_score = statistics.mean(f1_score_Cvalue_list)
 
     return mean_f1_Cvalue_score
-
-#f1_score_top_k_concepts_Cvalue_score('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',10)
 
 def f1_score_top_k_concepts_NcboCvalue(file_csv,limit_line,text_choice,threshold):   
     '''
