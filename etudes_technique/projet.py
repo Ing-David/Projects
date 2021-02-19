@@ -41,7 +41,7 @@ def pdf_convert_xml(pdf_link):
     '''
     function that convert pdf file to xml string
     ''' 
-    GROBID_URL = 'http://localhost:8080'
+    GROBID_URL = 'http://localhost:8070'
     url = '%s/api/processFulltextDocument' % GROBID_URL
     pdf = requests.get(pdf_link)
     xml = requests.post(url, files={'input': pdf.content})
@@ -288,7 +288,7 @@ def response_entity_fishing(text):
     'version': 1,
     'disable_existing_loggers': True,
     })
-    client = nerd_client.NerdClient()
+    client = nerd_client.NerdClient(apiBase="http://localhost:8090/service/")
     response = client.disambiguate_text(text)
     return response[0]['entities']
 
