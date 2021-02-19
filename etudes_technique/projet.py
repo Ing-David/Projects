@@ -865,7 +865,6 @@ def calcul_score_best_k_concepts_NcboCvalue(file_csv,border_row,text_choice,thre
     return mean_f1_NcboCvalue_score_test_set
 
 
-'''
-mean_f1_score_Cvalue_test_set = calcul_score_best_k_concepts_Cvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10]) 
-mean_f1_score_NCboCvalue_test_set = calcul_score_best_k_concepts_NcboCvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10])
-'''
+mean_f1_score_Cvalue_test_set = calcul_score_best_k_concepts_Cvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10])
+print(mean_f1_score_Cvalue_test_set)
+#mean_f1_score_NCboCvalue_test_set = calcul_score_best_k_concepts_NcboCvalue('corpus_eng_articles-type_1_2_1000_limit.csv',400,'body',[1,2,4,6,8,10])
